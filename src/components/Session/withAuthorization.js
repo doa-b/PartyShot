@@ -1,9 +1,9 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import {compose} from "redux";
+import {compose} from 'redux';
 
-import AuthUserContext from "./context";
-import {withFirebase} from "../Firebase";
+import AuthUserContext from './context';
+import {withFirebase} from '../Firebase';
 import * as ROUTES from '../../shared/routes'
 
 const withAuthorization = (condition) => Component => {

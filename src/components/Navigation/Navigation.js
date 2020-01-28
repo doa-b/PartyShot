@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../shared/routes'
-import SignOutButton from '../SignOut/SignOut'
 import { AuthUserContext } from '../Session'
 import * as ACCESS_LEVEL from '../../shared/accessLevel'
 
@@ -31,7 +30,6 @@ const NavigationAuth = ({ authUser }) => (
                 <Link to={ROUTES.ADMIN}>Admin</Link>
                 </li>
             ) : null}
-            <SignOutButton />
 
     </ul>
 );

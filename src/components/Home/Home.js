@@ -1,6 +1,6 @@
 import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles'
-import { withAuthorization } from "../Session/";
+import { withAuthorization } from '../Session/';
 
 const styles = theme => ({
     root: {},
