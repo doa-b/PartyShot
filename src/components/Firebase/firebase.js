@@ -3,8 +3,12 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 import {extension} from 'mime-types'
+import {createUUID, getCurrentUTCinMs} from "../../shared/utility";
+import * as local from '../../shared/localStorage'
+import * as actions from "../../store/actions";
 
 import {firebaseConfig} from '../../kluisje';
+import {fetchSuccess} from "../../store/actions";
 
 class Firebase {
     constructor() {
@@ -50,6 +54,10 @@ class Firebase {
                             email: authUser.email,
                             ...dbUser,
                         };
+                        // set local storage
+                        console.log('setting local storage');
+                        local.setName(dbUser.firstName);
+                        local.setPartyCode(dbUser.partyCode);
                         next(authUser);
                     });
             } else {
@@ -62,11 +70,56 @@ class Firebase {
     user = uid => this.db.ref(`users/${uid}`);
     users = () => this.db.ref('users');
 
-    // *** Storage API ***
+    // *** Parties API ***
 
+    party = partyCode => this.db.ref(`parties/${partyCode}`);
+    parties = () => this.db.ref(`parties`);
+
+    // *** requests API ***
+
+    requestList = (partyCode) => this.db.ref(`requests/${partyCode}`);
+
+    sendRequest = (partyCode, request, name, showResult) => {
+        this.requestList(partyCode).push().set(
+            {name: name, request: request}
+        ).then(() => showResult('je verzoekje is ingediend!'))
+            .catch((error) => showResult(error.message))
+    };
+
+    // *** photoList API ***
+    photoList = (partyCode) => this.db.ref(`photos/${partyCode}`);
+
+    // *** Storage API ***
     image = image => this.storage.ref(`images/${image.name}`);
 
     images = () => this.storage.ref(`images`);
+
+    photo = (fileName, partyCode) => this.storage.ref(`photos/${partyCode}/${fileName}`);
+
+    photos = (partyCode) => this.storage.ref(`photos/${partyCode}`);
+
+    photoUploader = (photoFile, partyCode, comment, uploader, showResult) => {
+        const fileName = createUUID();
+        this.photo(fileName, partyCode).put(photoFile)
+            .then((snapshot) => {
+                snapshot.ref
+                    .getDownloadURL().then(
+                    (url) => {
+                        const photoData = {
+                            lastShown: getCurrentUTCinMs() - 18000000, // 5 hours earlier
+                            uploader: uploader,
+                            comment: comment,
+                            url: url
+                        };
+                        this.photoList(partyCode).update({[fileName]: photoData});
+                    }
+                );
+                showResult('je foto is verstuurd!')
+            })
+
+
+            .catch((error) => showResult(error.message));
+    };
 
     // *** Uppload uploader *** //
 
@@ -119,7 +172,5 @@ class Firebase {
         });
 
 }
-
-
 
 export default Firebase

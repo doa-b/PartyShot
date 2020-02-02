@@ -10,6 +10,7 @@ const withAuthorization = (condition) => Component => {
     class WithAuthorization extends React.Component {
 
         componentDidMount() {
+            console.log('withAuthorization is mounted');
             this.listener = this.props.firebase.onAuthUserListener(
                 authUser => {
                     if (!condition(authUser)) {
