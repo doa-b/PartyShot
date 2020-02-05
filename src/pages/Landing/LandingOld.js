@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {compose} from "redux";
 import {connect} from "react-redux";
 import {Redirect} from 'react-router-dom'
-import * as actions from '../../store/actions'
-
 import ExifOrientationImg from 'react-exif-orientation-img'
-
+import * as actionTypes from '../../store/actions'
 import {getName, getPartyCode} from "../../shared/localStorage";
 import withStyles from '@material-ui/core/styles/withStyles'
 import * as ROUTES from '../../shared/routes';
@@ -25,7 +23,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {withFirebase} from "../../components/Firebase";
 import Snackbar from "@material-ui/core/Snackbar";
 import {Alert} from "@material-ui/lab";
-import RequestOrPhoto from "./RequestOrPhoto/RequestOrPhoto";
 
 const styles = theme => ({
         '@global': {
@@ -38,50 +35,28 @@ const styles = theme => ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            textAlign: 'center',
-            '@media (orientation:landscape)': {
-                flexDirection: 'row',
-                alignItems: 'flex-start',
-                marginTop: theme.spacing(1)
-            }
-        },
-        requestTextField: {
-            margin: 0
+            textAlign: 'center'
         },
         grid: {
             marginTop: theme.spacing(2),
-            '@media (orientation:landscape)': {
-                flexDirection: 'row',
-                marginTop: 0
-            }
         },
         photoFile: {
-            marginTop: '15%',
-            '@media (orientation:landscape)': {
-                marginTop: 5
-            }
-        }
-        ,
+            marginTop: '15%'
+        },
         photoIcon: {
             marginTop: '3%'
-        }
-        ,
+        },
         middle: {
-            marginTop: '15%',
-            '@media (orientation:landscape)': {
-                marginTop: 5
-            }
-        }
-        ,
+            marginTop: '15%'
+        },
         separator: {
+
             width: '100%',
             height: 10,
-            borderBottom:
-                '1px solid grey',
+            borderBottom: '1px solid grey',
             textAlign: 'center',
             marginBottom: 10
-        }
-        ,
+        },
         separatorText: {
             color: 'grey',
             fontWeight: 'bold',
@@ -89,98 +64,39 @@ const styles = theme => ({
             background: 'white',
             padding: '0 5px',
         },
-        divider: {
-            '@media (orientation:landscape)': {
-                display: 'none'
-            }
-        },
-
         request: {
-            marginTop: '10%',
-            '@media (orientation:landscape)': {
-                marginTop: 5
-            }
-        }
-        ,
+            marginTop: '10%'
+        },
         preview: {
             width: '100vw',
             height: '100vh'
-        }
-        ,
+        },
         comment: {
             outline: 'none',
-            backgroundColor:
-                'rgba(255, 255, 255, 0)',
-            width:
-                '92vw',
-            minWidth:
-                '20vw',
-            padding:
-                5,
-            border:
-                0,
-            fontFamily:
-                'Roboto'
-        }
-        ,
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            width: '92vw',
+            minWidth: '20vw',
+            padding: 5,
+            border: 0,
+            fontFamily: 'Roboto'
+        },
         spacingTop: {
-            position: 'fixed',
-            left:
-                5,
-            top:
-                5
-        }
-        ,
+            height: 5
+        },
         controls: {
             width: '90vw',
-            position:
-                'fixed',
-            bottom:
-                10,
-            right:
-                10,
-            left:
-                10,
-            display:
-                'flex',
-            flexDirection:
-                'row',
-            justifyContent:
-                'space-between',
-            alignItems:
-                'center',
-        }
-        ,
-        previewImage: {
-            marginTop: 'auto',
-            marginLeft: 'auto',
-            objectFit: 'cover',
-            width: '100%',
-        }
-        ,
-        container: {
+            position: 'fixed',
+            bottom: 10,
+            right: 10,
+            left: 10,
             display: 'flex',
-            justifyContent:
-                'center',
-            alignItems:
-                'center',
-            textAlign:
-                'center',
-            width:
-                '100%',
-            height:
-                '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
         },
-    requestContainer: {
-        '@media (orientation:landscape)': {
-            flexGrow: 4
+        previewImage: {
+            width: '100vw',
         }
-    },
-    photoContainer: {
-        '@media (orientation:landscape)': {
-            flexGrow: 1
-        }
-    }
     })
 ;
 
@@ -191,7 +107,7 @@ const initialState =
         photoUrl: '',
         photoFile: null,
         compressing: false, //set to true when compressing. Disables 'verstuur' button, shows spinner instead
-        compressedFile: null,
+        compressedPhoto: null,
         message: '',
     };
 
@@ -265,15 +181,8 @@ class Landing extends Component {
     onSend(firebase) {
         const fileToSend = (this.state.compressedFile < this.state.photoFile)
             ? this.state.compressedFile : this.state.photoFile;
-        firebase.photoUploader(
-            fileToSend,
-            this.props.partyCode,
-            this.isPortrait(),
-            this.state.comment,
-            getName(),
-            this.showResult
-        );
-        this.onClose();
+        firebase.photoUploader(fileToSend, this.props.partyCode, this.state.comment, getName(), this.showResult);
+        this.onClose()
     };
 
     onClose = () => {
@@ -288,12 +197,7 @@ class Landing extends Component {
     };
 
     onSubmitRequest = () => {
-        this.props.firebase.sendRequest(
-            this.props.partyCode,
-            this.state.request,
-            getName(),
-            this.showResult);
-        this.props.setNewRequests (this.props.firebase, getPartyCode(), 1)
+        this.props.firebase.sendRequest(this.props.partyCode, this.state.request, getName(), this.showResult);
         this.setState({request: ''});
     };
 
@@ -311,32 +215,23 @@ class Landing extends Component {
         event.preventDefault()
     };
 
-    isPortrait = () => {
-        const image = document.getElementById('photo');
-        if (image.naturalWidth < image.naturalHeight) return true;
-        return false
-    };
-
     render() {
         const {classes, firebase} = this.props;
-        const {request, comment, photoUrl, photoFile, compressing, message, compressedFile} = this.state;
+        const {request, comment, photoUrl, photoFile, compressing, message} = this.state;
         // if now() > partyFinish page = 'party is finished, you cannot upload any more pictures
         // ask party.name for pictures'
         // if now() < partyStart page = <countdown>
 
         let page = (
-            <Container component='main' maxWidth='sm'>
-                <RequestOrPhoto/>
+            <Container component='main' maxWidth='xs'>
                 <CssBaseline/>
                 <div className={classes.paper}>
-                    <Grid container spacing={2} className={classes.requestContainer}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12} className={classes.request}>
                             <Typography variant='h6'>
                                 Stuur een verzoekje
                             </Typography>
                             <TextField
-                                fullWidth
-                                className={classes.requestTextField}
                                 multiline
                                 value={request}
                                 id='request'
@@ -354,15 +249,11 @@ class Landing extends Component {
                                 Stuur
                             </Button>
                         </Grid>
-                    </Grid>
-                    <Grid container spacing={2} className={classes.divider}>
                         <Grid item xs={12} className={classes.middle}>
                             <div className={classes.separator}>
                                 <span className={classes.separatorText}>Of</span>
                             </div>
                         </Grid>
-                    </Grid>
-                    <Grid container spacing={2} className={classes.photoContainer}>
                         <Grid item xs={12} className={classes.photoFile}>
                             <Typography variant='h6'>
                                 Neem een foto
@@ -382,14 +273,17 @@ class Landing extends Component {
         if (photoFile) {
             page = (
                 <>
-                    <div className={classes.container}>
-                        {!!(compressedFile) ? (
-                            <img src={URL.createObjectURL(compressedFile)} id='photo' className={classes.previewImage}/>)
-                         : (<ExifOrientationImg id='photo' className={classes.previewImage} src={photoUrl}/>)}
-
-                        <div className={classes.spacingTop}>
-                            <SpeechBubble>
-                                <form onSubmit={(event) => this.setComment(event)}>
+                    <ExifOrientationImg className={classes.previewImage} src={photoUrl}/>
+                    <div className={classes.preview}
+                         style={{
+                             backgroundImage: `url(${photoUrl})`,
+                             backgroundPosition: 'center',
+                             backgroundSize: 'contain',
+                             backgroundRepeat: 'no-repeat'
+                         }}>
+                        <div className={classes.spacingTop}></div>
+                        <SpeechBubble>
+                            <form onSubmit={(event) => this.setComment(event)}>
                                 <textarea
                                     onKeyDown={(event) => this.onHandleKeyDown(event)}
                                     rows={2}
@@ -400,29 +294,29 @@ class Landing extends Component {
                                     autoComplete='off'
                                     maxLength={120}
                                     onChange={(event) => this.onChange(event.target)}/>
-                                </form>
-                            </SpeechBubble>
-                        </div>
-                        <div className={classes.controls}>
-                            <Fab onClick={this.handleClick}>
-                                <PhotoCameraIcon fontSize="large"/>
-                            </Fab>
-                            <Button
-                                id='takePhoto'
-                                onClick={() => this.onSend(firebase)}
-                                variant="contained"
-                                color="primary"
-                                disabled={compressing}>
-                                {compressing && <CircularProgress/>}
-                                Verstuur
-                            </Button>
-                            <Fab
-                                onClick={this.onClose}
-                                color='secondary'>
-                                <CloseIcon fontSize='large'/>
-                            </Fab>
-                        </div>
+                            </form>
+                        </SpeechBubble>
                     </div>
+                    <div className={classes.controls}>
+                        <Fab onClick={this.handleClick}>
+                            <PhotoCameraIcon fontSize="large"/>
+                        </Fab>
+                        <Button
+                            id='takePhoto'
+                            onClick={() => this.onSend(firebase)}
+                            variant="contained"
+                            color="primary"
+                            disabled={compressing}>
+                            {compressing && <CircularProgress/>}
+                            Verstuur
+                        </Button>
+                        <Fab
+                            onClick={this.onClose}
+                            color='secondary'>
+                            <CloseIcon fontSize='large'/>
+                        </Fab>
+                    </div>
+
                 </>)
         }
 
@@ -459,11 +353,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onFetch: (firebase, partyCode) => dispatch(actions.fetch(firebase, partyCode)),
-        onRemoveListener: () => dispatch(actions.removeListener()),
-        onSetFullScreen: (isFullScreen) => dispatch(actions.setFullScreen(isFullScreen)),
-        setNewRequests: (firebase, partyCode, number) =>
-            dispatch(actions.increaseNewRequests(firebase, partyCode, number))
+        onFetch: (firebase, partyCode) => dispatch(actionTypes.fetch(firebase, partyCode)),
+        onRemoveListener: () => dispatch(actionTypes.removeListener()),
+        onSetFullScreen: (isFullScreen) => dispatch(actionTypes.setFullScreen(isFullScreen))
     }
 };
 

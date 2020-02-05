@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {createUniquePartyCode} from "../../shared/utility";
+import {createUniquePartyCode} from "../../../../shared/utility";
 import {compose} from "redux";
-import {withFirebase} from "../../components/Firebase";
+import {withFirebase} from "../../../../components/Firebase";
 
 const initialState = {
     partyCode: createUniquePartyCode(),
@@ -10,8 +10,9 @@ const initialState = {
     finish: 0,
     blocked: 0,
 
+    newRequests: 0,
     event: 'Party of the year',
-    name: 'John Doe',
+    name: 'Kibbeling',
     userUid: '',
 };
 /**

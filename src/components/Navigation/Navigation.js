@@ -27,7 +27,7 @@ const NavigationAuth = ({ authUser }) => (
         </li>
             {(authUser.accessLevel>=60) ? (
                 <li>
-                <Link to={ROUTES.ADMIN}>Admin</Link>
+                <Link to={ROUTES.PARTIES}>Admin</Link>
                 </li>
             ) : null}
 

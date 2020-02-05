@@ -1,4 +1,6 @@
 export {
     fetch,
-    removeListener
+    removeListener,
+    setFullScreen,
+    increaseNewRequests
 } from './party'

@@ -71,7 +71,6 @@ class Firebase {
     users = () => this.db.ref('users');
 
     // *** Parties API ***
-
     party = partyCode => this.db.ref(`parties/${partyCode}`);
     parties = () => this.db.ref(`parties`);
 
@@ -81,7 +80,7 @@ class Firebase {
 
     sendRequest = (partyCode, request, name, showResult) => {
         this.requestList(partyCode).push().set(
-            {name: name, request: request}
+            {name: name, request: request, time: getCurrentUTCinMs()}
         ).then(() => showResult('je verzoekje is ingediend!'))
             .catch((error) => showResult(error.message))
     };
@@ -98,7 +97,14 @@ class Firebase {
 
     photos = (partyCode) => this.storage.ref(`photos/${partyCode}`);
 
-    photoUploader = (photoFile, partyCode, comment, uploader, showResult) => {
+    deletePhoto = (fileName, partyCode) => {
+      this.photo(fileName, partyCode).delete()
+          .then(() => {
+              this.photoList(partyCode).child(fileName).remove();
+          })
+    };
+
+    photoUploader = (photoFile, partyCode, isPortrait, comment, uploader, showResult) => {
         const fileName = createUUID();
         this.photo(fileName, partyCode).put(photoFile)
             .then((snapshot) => {
@@ -109,7 +115,8 @@ class Firebase {
                             lastShown: getCurrentUTCinMs() - 18000000, // 5 hours earlier
                             uploader: uploader,
                             comment: comment,
-                            url: url
+                            url: url,
+                            isPortrait: isPortrait
                         };
                         this.photoList(partyCode).update({[fileName]: photoData});
                     }

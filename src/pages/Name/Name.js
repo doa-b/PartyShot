@@ -38,8 +38,6 @@ const Name = withStyles(styles)(
     ({classes, history}) => {
         const [name, setName] = useState('');
 
-        const partyCode = local.getPartyCode();
-
         const onSubmit = (event) => {
             event.preventDefault();
             local.setName(name);
@@ -48,7 +46,8 @@ const Name = withStyles(styles)(
 
         return (
             <Container component='main' maxWidth='xs'>
-                { (!!partyCode) ? null : <Redirect to={ROUTES.PARTY_CODE}/>}
+                { (!!local.getPartyCode()) ? null : <Redirect to={ROUTES.PARTY_CODE}/>}
+                { (!!local.getName()) ? <Redirect to={ROUTES.LANDING}/> : null}
                 <CssBaseline/>
                 <div className={classes.paper}>
                     <Grid container spacing={2}>

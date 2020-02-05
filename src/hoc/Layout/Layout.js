@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
-import { compose } from 'redux';
-import { withRouter } from 'react-router-dom'
-import { pageTitle } from '../../shared/routes';
-
-
+import {compose} from 'redux';
+import {withRouter} from 'react-router-dom'
+import {pageTitle} from '../../shared/routes';
+import {connect} from "react-redux";
 
 
 import MyToolbar from '../../components/ui/MyToolbar/MyToolbar';
 import MySideDrawer from '../../components/ui/MySideDrawer/MySideDrawer';
-
 
 
 /**
@@ -33,27 +31,41 @@ class Layout extends Component {
     };
 
     render() {
-
+        const { location, fullScreen, event, name, variant, children, newRequests } = this.props;
         return (
             <>
-                <MyToolbar
-                    title={pageTitle(this.props.location.pathname)}
-                    onMenuClick={this.toggleDrawer}     />
+                {(fullScreen) ? null : (
+                    <MyToolbar
+                        title={pageTitle(location.pathname)}
+                        onMenuClick={this.toggleDrawer}
+                        event={event}
+                        name={name}
+                    newRequests={newRequests}/>
+                )}
                 <MySideDrawer
-                    variant={this.props.variant}
+                    variant={variant}
                     open={this.state.drawer}
                     onClose={this.toggleDrawer}
                     onItemClick={this.onItemClick}
                 />
                 <div>
-                {this.props.children}
+                    {children}
                 </div>
-           </>
+            </>
         )
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        fullScreen: state.party.fullScreen,
+        event: state.party.event,
+        name: state.party.name,
+        newRequests: state.party.newRequests
+    }
+};
 
 export default compose(
-    withRouter
+    withRouter,
+    connect(mapStateToProps)
 )(Layout);

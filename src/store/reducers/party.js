@@ -14,7 +14,9 @@ export const initialState = {
     photos: [],
     requests: [],
     loading: false,
-    error: false
+    error: false,
+    fullScreen: false,
+    newRequests: 0
 };
 
 const reducer = (state = initialState, action) => {
@@ -22,6 +24,7 @@ const reducer = (state = initialState, action) => {
       case actionTypes.START: return updateObject(state, {error: false, loading: true});
       case actionTypes.SUCCES: return updateObject(state, {error: false, loading: false});
       case actionTypes.FETCH: return updateObject(state, action.data);
+      case actionTypes.SET_FULL_SCREEN: return updateObject(state, {fullScreen: action.isFullScreen});
       default: return state
   }
 };

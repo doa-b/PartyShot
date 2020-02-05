@@ -27,9 +27,7 @@ const homePage = asyncComponent(() => {
 const accountPage = asyncComponent(() => {
     return import ('./authentication/Account/Account')
 });
-const adminPage = asyncComponent(() => {
-    return import ('./components/Admin/Admin')
-});
+
 const passwordForgetPage = asyncComponent(() => {
     return import ('./authentication')
 });
@@ -45,9 +43,28 @@ const partyCodePage = asyncComponent(() => {
     return import ('./pages/PartyCode/PartyCode')
 });
 
-const partDetailsPage = asyncComponent(() => {
-    return import ('./pages/PartyDetails/PartyDetails')
+const partiesPage = asyncComponent(() => {
+    return import ('./pages/Admin/Parties/Parties')
 });
+
+const partyDetailsPage = asyncComponent(() => {
+    return import ('./pages/Admin/Parties/PartyDetails/PartyDetails')
+});
+
+const galleryPage = asyncComponent(() => {
+    return import ('./pages/Gallery/Gallery')
+});
+
+const monitorPage = asyncComponent(() => {
+    return import ('./pages/Admin/Monitor/Monitor')
+});
+
+
+const requestsPage = asyncComponent(() => {
+    return import ('./pages/Admin/Requests/Requests')
+});
+
+
 /**
  * Created by Doa on 27-1-2020.
  */
@@ -61,11 +78,15 @@ const routes = (
         <Route exact path={ROUTES.PASSWORD_FORGET} component={passwordForgetPage} />
         <Route exact path={ROUTES.HOME} component={homePage} />
         <Route exact path={ROUTES.ACCOUNT} component={accountPage} />
-        <Route exact path={ROUTES.ADMIN} component={adminPage} />
+        <Route exact path={ROUTES.PARTIES} component={partiesPage} />
+        <Route exact path={ROUTES.PARTY_DETAILS} component={partyDetailsPage}/>
+        <Route exact path={ROUTES.REQUESTS} component={requestsPage}/>
+        <Route exact path={ROUTES.MONITOR} component={monitorPage}/>
         <Route exact path={ROUTES.PRIVACY_POLICY} component={privacyPolicyPage} />
         <Route exact path={ROUTES.NAME} component={namePage} />
         <Route exact path={ROUTES.PARTY_CODE} component={partyCodePage}/>
-        <Route exact path={ROUTES.PARTY_DETAILS} component={partDetailsPage}/>
+
+        <Route exact path={ROUTES.GALLERY} component={galleryPage}/>
     </Switch>
 );
 

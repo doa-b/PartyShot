@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {Route, NavLink, Switch} from 'react-router-dom';
 import clsx from 'clsx';
 import * as ROUTES from '../../../shared/routes';
 import * as ACCESSLEVEL from '../../../shared/accessLevel';
-import { AuthUserContext } from '../../Session'
+import {AuthUserContext} from '../../Session'
 
 import {Checkbox, withStyles} from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
+
+
 import HomeIcon from '@material-ui/icons/Home';
 import TuneIcon from '@material-ui/icons/Tune';
-
+import QueueMusicIcon from '@material-ui/icons/QueueMusic';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import AppsIcon from '@material-ui/icons/Apps';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import CropFreeIcon from '@material-ui/icons/CropFree';
+import PersonIcon from '@material-ui/icons/Person';
+import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -64,9 +72,15 @@ const MySideDrawer = withStyles(styles)(
 
         const SideDrawerNonAuth = () => (
             <List>
-                <Typography className={classes.nonAuth} variant='subtitle1' >
-                   This App needs authentication
+                <Typography className={classes.nonAuth} variant='subtitle1'>
+                    This App needs authentication
                 </Typography>
+                <NavItem
+                    to={ROUTES.LANDING}
+                    text='Shoot!'
+                    Icon={HomeIcon}
+                    onClick={onItemClick()}
+                />
                 <NavItem
                     to={ROUTES.SIGN_IN}
                     text='Sign in'
@@ -82,13 +96,13 @@ const MySideDrawer = withStyles(styles)(
             </List>
         );
 
-        const SideDrawerAuth = ({ authUser }) => (
+        const SideDrawerAuth = ({authUser}) => (
             <List>
                 <ListItem alignItems='center'>
                     <Avatar variant='square'
-                        className={classes.avatar}
-                        alt='logged in user'
-                        src={authUser.imageUrl}/>
+                            className={classes.avatar}
+                            alt='logged in user'
+                            src={authUser.imageUrl}/>
                 </ListItem>
                 <ListSubheader>
                     {authUser.firstName + ' ' + authUser.lastName}
@@ -111,34 +125,70 @@ const MySideDrawer = withStyles(styles)(
                 <ListItem>
                     <Checkbox
                         value={setting1}
-                        onChange={()=> toggleSetting1(!setting1)}
+                        onChange={() => toggleSetting1(!setting1)}
                         checked={setting1}/>
                     <ListItemText>
-                       Dummy Setting
+                        Dummy Setting
                     </ListItemText>
                 </ListItem>
                 <ListSubheader>
                     Navigation
                 </ListSubheader>
                 <NavItem
-                    to={ROUTES.LANDING}
-                    text='Landing'
-                    Icon={HomeIcon}
-                    onClick={onItemClick()}
-                />
-                <NavItem
                     to={ROUTES.HOME}
                     text='Home'
                     Icon={HomeIcon}
                     onClick={onItemClick()}
                 />
-                {(authUser.accessLevel >= ACCESSLEVEL.ADMINISTRATOR) && (
                 <NavItem
-                    to={ROUTES.ADMIN}
-                    text='ADMIN'
-                    Icon={SupervisorAccountIcon}
+                    to={ROUTES.LANDING}
+                    text='Shoot!'
+                    Icon={AddAPhotoIcon}
                     onClick={onItemClick()}
                 />
+                {(authUser.accessLevel >= ACCESSLEVEL.ORGANISER) && (
+                    <NavItem
+                        to={ROUTES.GALLERY}
+                        text='Gallerij'
+                        Icon={AppsIcon}
+                        onClick={onItemClick()}
+                    />
+                )}
+                {(authUser.accessLevel >= ACCESSLEVEL.ARTIST) && (
+                    <NavItem
+                        to={ROUTES.REQUESTS}
+                        text='Verzoekjes'
+                        Icon={QueueMusicIcon}
+                        onClick={onItemClick()}
+                    />
+                )}
+                {(authUser.accessLevel >= ACCESSLEVEL.ADMINISTRATOR) && (
+                    <>
+                        <NavItem
+                            to={ROUTES.MONITOR}
+                            text='Monitor'
+                            Icon={DesktopWindowsIcon}
+                            onClick={onItemClick()}
+                        />
+                        <NavItem
+                            to={ROUTES.PARTIES}
+                            text='Events'
+                            Icon={ListAltIcon}
+                            onClick={onItemClick()}
+                        />
+                        <NavItem
+                            to={ROUTES.NAME}
+                            text='Naam'
+                            Icon={PersonIcon}
+                            onClick={onItemClick()}
+                        />
+                        <NavItem
+                            to={ROUTES.PARTY_CODE}
+                            text='PartyCode'
+                            Icon={CropFreeIcon}
+                            onClick={onItemClick()}
+                        />
+                    </>
                 )}
             </List>);
 
@@ -151,7 +201,7 @@ const MySideDrawer = withStyles(styles)(
                     })}
                 />
                 <AuthUserContext.Consumer>
-                {authUser => authUser ? <SideDrawerAuth authUser={authUser}/> : <SideDrawerNonAuth/>}
+                    {authUser => authUser ? <SideDrawerAuth authUser={authUser}/> : <SideDrawerNonAuth/>}
                 </AuthUserContext.Consumer>
             </Drawer>
         )

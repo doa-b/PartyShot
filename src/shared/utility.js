@@ -9,7 +9,39 @@ export const createUUID = () => {
 };
 
 export const createUniquePartyCode = () => {
-    return '123456'
+    return '000000'
+};
+
+export const msToDate = (miliseconds) => {
+    const date = new Date(miliseconds);
+    return date.toDateString();
+};
+
+export const durationToDateTime = (duration) => {
+    const date = new Date(duration);
+    console.log(date)
+    return date;
+};
+export const dateToMs = (date) => {
+    return date.getUTCMilliseconds()
+};
+
+export const msToTime = (miliseconds, withSeconds, withHours = true) => {
+    // add leading zero for number <10
+    const alz = (value) => {
+        return (value < 10) ? '0' + value : value;
+    };
+
+    var milliseconds = parseInt((miliseconds % 1000) / 100),
+        seconds = Math.floor((miliseconds / 1000) % 60),
+        minutes = Math.floor((miliseconds / (1000 * 60)) % 60),
+        hours = Math.floor((miliseconds / (1000 * 60 * 60)) % 24);
+    const showHours = (withHours) ? alz(hours) + ':' : '';
+
+
+    if (withSeconds) {
+        return showHours + alz(minutes) + ":" + alz(seconds)
+    } else return showHours + alz(minutes);
 };
 
 export const getCurrentUTCinMs = () => {
@@ -64,7 +96,7 @@ export const convertObjectsAndSortByKey = (object, orderKey, order = 'asc') => {
     }
 
     // sort array of objects by order orderKey
-    newArray.sort(compareValues(orderKey));
+    newArray.sort(compareValues(orderKey, order));
     return newArray;
 };
 

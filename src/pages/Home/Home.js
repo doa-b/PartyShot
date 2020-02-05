@@ -15,7 +15,7 @@ const Home = withStyles(styles)(
             <>
                 <h1>Welkom!</h1>
                 <p>Je kunt net als je gasten <a href={ROUTES.LANDING}>hier</a> foto's insturen of verzoekjes doen</p>
-                <p>Alleen jij kunt alle foto's <a href={ROUTES.HOME}>hier</a> bekijken, en indien nodig, wissen</p>
+                <p>Alleen jij kunt alle foto's <a href={ROUTES.GALLERY}>hier</a> bekijken, en indien nodig, wissen</p>
             </>);
     });
 
