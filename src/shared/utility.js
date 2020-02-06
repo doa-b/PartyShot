@@ -1,3 +1,6 @@
+import * as local from "./localStorage";
+import * as ROUTES from "./routes";
+
 export const createUUID = () => {
     var dt = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -8,8 +11,28 @@ export const createUUID = () => {
     return uuid;
 };
 
-export const createUniquePartyCode = () => {
-    return '000000'
+export const generatePassword = (length) => {
+       const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+       let retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+};
+
+export const createUniquePartyCode = (firebase) => {
+    return new Promise(resolve => {
+        firebase.parties().once('value')
+            .then((snapshot) => {
+                console.log(snapshot.val());
+                let number = 0;
+                do {
+                    number = Math.floor(Math.random() * 1000000);
+                } while (snapshot.child(number).exists());
+                resolve('000000')
+            });
+    })
+
 };
 
 export const msToDate = (miliseconds) => {

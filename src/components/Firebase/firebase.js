@@ -77,6 +77,7 @@ class Firebase {
     // *** requests API ***
 
     requestList = (partyCode) => this.db.ref(`requests/${partyCode}`);
+    requests = () => this.db.ref(`requests`);
 
     sendRequest = (partyCode, request, name, showResult) => {
         this.requestList(partyCode).push().set(
@@ -87,6 +88,7 @@ class Firebase {
 
     // *** photoList API ***
     photoList = (partyCode) => this.db.ref(`photos/${partyCode}`);
+    photos = () => this.db.ref(`photos`);
 
     // *** Storage API ***
     image = image => this.storage.ref(`images/${image.name}`);
@@ -95,7 +97,7 @@ class Firebase {
 
     photo = (fileName, partyCode) => this.storage.ref(`photos/${partyCode}/${fileName}`);
 
-    photos = (partyCode) => this.storage.ref(`photos/${partyCode}`);
+   // photos = (partyCode) => this.storage.ref(`photos/${partyCode}`);
 
     deletePhoto = (fileName, partyCode) => {
       this.photo(fileName, partyCode).delete()

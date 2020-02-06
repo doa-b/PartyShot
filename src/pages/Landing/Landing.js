@@ -297,6 +297,12 @@ class Landing extends Component {
         this.setState({request: ''});
     };
 
+    onHandleKeyDownRequest = (event) => {
+        if (event.key === 'Enter') {
+            this.onSubmitRequest()
+        }
+    };
+
     showResult = (message) => {
         console.log('result');
         console.log(message);
@@ -342,6 +348,7 @@ class Landing extends Component {
                                 id='request'
                                 label='artiest - titel (versie)'
                                 onChange={(event) => this.onChange(event.target)}
+                                onKeyDown={(event) => this.onHandleKeyDownRequest(event)}
                             />
                         </Grid>
                         <Grid item xs={12}>

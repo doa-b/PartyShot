@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import {getPartyCode} from "../../../shared/localStorage";
 import RequestsTable from "./RequestsTable";
 import {Paper} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 
 
 const styles = theme => ({
@@ -16,12 +17,15 @@ const styles = theme => ({
         }
     },
     paper: {
-        width: '100%',
+        width: '300',
         marginTop: theme.spacing(1),
         display: "flex",
         flexDirection: "row",
         alignItems: "center"
     },
+    grid: {
+
+    }
 });
 
 /**
@@ -31,7 +35,7 @@ class Requests extends Component {
 
     componentDidMount() {
         getPartyCode() && this.props.onFetch(this.props.firebase, getPartyCode(), true);
-        this.props.setNewRequests (this.props.firebase, getPartyCode(), 0)
+        this.props.setNewRequests(this.props.firebase, getPartyCode(), 0)
     }
 
     componentWillUnmount() {
@@ -47,19 +51,20 @@ class Requests extends Component {
         // you can delete a node by updating it to null
         const deletes = {};
         selected.map((select) => {
-          deletes[select] = null
+            deletes[select] = null
         });
         this.props.firebase.requestList(getPartyCode()).update(deletes);
     };
 
     render() {
         const {classes, requests} = this.props;
-        return (<div className={classes.paper}>
-            <RequestsTable
-                rows={requests}
-                onDeleteClicked={this.onDeleteClicked}
-            />
-        </div>);
+        return (
+            <Grid item xs={12} className={classes.paper}>
+                <RequestsTable
+                    rows={requests}
+                    onDeleteClicked={this.onDeleteClicked}
+                />
+            </Grid>);
 
     }
 }

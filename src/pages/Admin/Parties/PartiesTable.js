@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import {lighten, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,7 +17,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import {msToTime} from "../../../shared/utility";
+import {msToDate, msToTime} from "../../../shared/utility";
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -44,15 +44,17 @@ function getSorting(order, orderBy) {
 }
 
 const headCells = [
-    { id: 'time', numeric: false, disablePadding: false, label: 'Tijd' },
-    { id: 'name', numeric: false, disablePadding: false, label: 'Naam' },
-    { id: 'request', numeric: false, disablePadding: false, label: 'Verzoekje' },
-    { id: 'delete', numeric: false, disablePadding: false, label: 'Delete' },
+    {id: 'start', numeric: false, disablePadding: false, label: 'Datum'},
+    {id: 'tijd', numeric: false, disablePadding: false, label: 'Tijd'},
+    {id: 'event', numeric: false, disablePadding: false, label: 'Event'},
+    {id: 'naam', numeric: false, disablePadding: false, label: 'Naam'},
+    {id: 'id', numeric: false, disablePadding: false, label: 'Party Code'},
+    {id: 'delete', numeric: false, disablePadding: false, label: 'Delete'},
 
 ];
 
 function EnhancedTableHead(props) {
-    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const {classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort} = props;
     const createSortHandler = property => event => {
         onRequestSort(event, property);
     };
@@ -65,7 +67,7 @@ function EnhancedTableHead(props) {
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={numSelected === rowCount}
                         onChange={onSelectAllClick}
-                        inputProps={{ 'aria-label': 'select all requests' }}
+                        inputProps={{'aria-label': 'select all requests'}}
                     />
                 </TableCell>
                 {headCells.map(headCell => (
@@ -127,7 +129,7 @@ const useToolbarStyles = makeStyles(theme => ({
 
 const EnhancedTableToolbar = props => {
     const classes = useToolbarStyles();
-    const { numSelected, onDelete } = props;
+    const {numSelected, onDelete} = props;
 
     return (
         <Toolbar
@@ -137,11 +139,11 @@ const EnhancedTableToolbar = props => {
         >
             {numSelected > 0 ? (
                 <Typography className={classes.title} color="inherit" variant="subtitle1">
-                    {numSelected}  requests selected
+                    {numSelected} events selected
                 </Typography>
             ) : (
                 <Typography className={classes.title} variant="h6" id="tableTitle">
-                    requests
+                    events
                 </Typography>
             )}
 
@@ -150,7 +152,7 @@ const EnhancedTableToolbar = props => {
                     <IconButton
                         onClick={onDelete}
                         aria-label="delete">
-                        <DeleteIcon />
+                        <DeleteIcon/>
                     </IconButton>
                 </Tooltip>
             ) : null}
@@ -171,6 +173,8 @@ const useStyles = makeStyles(theme => ({
         display: 'block',
         whiteSpace: 'normal',
         overflowX: 'auto',
+    },
+    tableRow: {
     },
     visuallyHidden: {
         border: 0,
@@ -202,9 +206,9 @@ const useStyles = makeStyles(theme => ({
  * @returns {*}
  * @constructor
  */
-function RequestsTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked}) {
+function PartiesTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked}) {
     const SELECT_CHECKBOX = 'SELECT_CHECKBOX';
-    const ACTIVE_CHECKBOX = 'ACTIVE_CHECKBOX';
+    const DELETE_BUTTON = 'DELETE_BUTTON';
     const classes = useStyles();
     const [order, setOrder] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('time');
@@ -222,9 +226,7 @@ function RequestsTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked
         if (event.target.id === SELECT_CHECKBOX) {
             return handleClick(event, row.id)
         }
-        if (event.target.id === ACTIVE_CHECKBOX) {
-            return onActiveClicked(row)
-        }
+        onDetailsClicked(row.id);
     };
 
     const handleSelectAllClick = event => {
@@ -275,77 +277,84 @@ function RequestsTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked
 
     return (
         <div className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length}
-                                      onDelete={() => deleteSelected(selected)} />
-                <div>
-                    <Table
-                        className={classes.table}
-                        aria-labelledby="tableTitle"
-                        size='small'
-                        aria-label="enhanced table"
-                    >
-                        <EnhancedTableHead
-                            classes={classes}
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
-                            onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
-                        />
-                        <TableBody>
-                            {stableSort(rows, getSorting(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(row.id);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
+            <EnhancedTableToolbar numSelected={selected.length}
+                                  onDelete={() => deleteSelected(selected)}/>
+            <div>
+                <Table
+                    className={classes.table}
+                    aria-labelledby="tableTitle"
+                    size='small'
+                    aria-label="enhanced table"
+                >
+                    <EnhancedTableHead
+                        classes={classes}
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        onRequestSort={handleRequestSort}
+                        rowCount={rows.length}
+                    />
+                    <TableBody>
+                        {stableSort(rows, getSorting(order, orderBy))
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((row, index) => {
+                                const isItemSelected = isSelected(row.id);
+                                const labelId = `enhanced-table-checkbox-${index}`;
 
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event)=> {handleRowClicked(event, row)}}
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={row.id}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    id={SELECT_CHECKBOX}
-                                                    checked={isItemSelected}
-                                                    inputProps={{ 'aria-labelledby': labelId }}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                className={classes.cell}
-                                                align="left"
-                                                onClick={()=> onDetailsClicked(row)}> {msToTime(row.time)}</TableCell>
-                                            <TableCell  className={classes.cell} align="left" onClick={()=> onDetailsClicked(row)}>{row.name}</TableCell>
-                                            <TableCell  className={classes.cell} align="left" onClick={()=> onDetailsClicked(row)}>{row.request}</TableCell>
-                                            <TableCell  className={classes.cell} padding="checkbox">
-                                                <IconButton onClick={() => onDeleteClicked([row.id])}>
-                                                    <DeleteIcon color='secondary'/>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </div>
-                <TablePagination
-                    classes={{toolbar: classes.pagination}}
-                    className={classes.pagination}
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
+                                return (
+                                    <TableRow
+                                        className={classes.tableRow}
+                                        hover
+                                        onClick={(event) => {
+                                            handleRowClicked(event, row)
+                                        }}
+                                        role="checkbox"
+                                        tabIndex={-1}
+                                        key={row.id}
+                                        selected={isItemSelected}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                id={SELECT_CHECKBOX}
+                                                checked={isItemSelected}
+                                                inputProps={{'aria-labelledby': labelId}}
+                                            />
+                                        </TableCell>
+                                        <TableCell
+                                            className={classes.cell}
+                                            align="left">
+                                            {msToDate(row.start)}</TableCell>
+                                        <TableCell className={classes.cell}
+                                                   align="left">{msToTime(row.start)}</TableCell>
+                                        <TableCell className={classes.cell} align="left">{row.event}</TableCell>
+                                        <TableCell className={classes.cell} align="left">{row.name}</TableCell>
+                                        <TableCell className={classes.cell} align="left">{row.id}</TableCell>
+                                        <TableCell className={classes.cell} padding="checkbox">
+                                            <IconButton
+                                                onClick={() => onDeleteClicked([row.id])}>
+                                                <DeleteIcon color='secondary'/>
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                    </TableBody>
+                </Table>
+            </div>
+            <TablePagination
+                classes={{toolbar: classes.pagination}}
+                className={classes.pagination}
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
         </div>
     );
 }
 
-export default RequestsTable;
+export default PartiesTable;

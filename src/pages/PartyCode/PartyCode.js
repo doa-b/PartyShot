@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {withFirebase} from "../../components/Firebase";
 import withStyles from '@material-ui/core/styles/withStyles'
 import * as ROUTES from '../../shared/routes';
 import * as local from "../../shared/localStorage";
@@ -41,7 +42,7 @@ const styles = theme => ({
  * Created by Doa on 27-1-2020.
  */
 const PartyCode = withStyles(styles)(
-    ({classes, history}) => {
+    ({classes, history, firebase}) => {
         const [partyCode, setPartyCode] = useState('');
         const [error, setError] = useState(null);
 
@@ -49,15 +50,18 @@ const PartyCode = withStyles(styles)(
             code.length < 7 && setPartyCode(code);
             error && setError(null);
             if (code.length === 6) {
-                // TODO check if code is valid
-                // if response = null -> set error: partyCode is invalid
-                // else go to next page
-                if (true) {
-                    local.setPartyCode(code);
-                    history.push(ROUTES.NAME)
-                } else {
-                    setError('Geef een geldige 6 cijfer code')
-                }
+
+                firebase.parties().child(code).once('value')
+                    .then((snapshot) => {
+                        console.log(snapshot.val());
+                        let check = snapshot.exists();
+                        if (check) {
+                            local.setPartyCode(code);
+                            history.push(ROUTES.NAME)
+                        } else {
+                            setError('Geef een geldige 6 cijfer code')
+                        }
+                    });
             }
         };
 
@@ -101,5 +105,5 @@ const PartyCode = withStyles(styles)(
             </Container>);
     });
 
-export default PartyCode;
+export default withFirebase(PartyCode);
 

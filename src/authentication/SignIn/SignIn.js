@@ -19,10 +19,13 @@ const styles = theme => ({
         }
     },
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(1),
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        '@media (min-width:600px)': {
+            marginTop: theme.spacing(8)
+        }
     },
     avatar: {
         margin: theme.spacing(1),

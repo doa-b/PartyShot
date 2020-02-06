@@ -63,13 +63,12 @@ const MyToolbar = withStyles(styles)(
                             <MenuIcon/>
                         </IconButton>
                         <Typography
-                            variant='h5'
+                            variant='body1'
                             color='inherit'
-                            className={classes.flex}
                         >
                             {title.toUpperCase()}
                         </Typography>
-                        <span className={classes.pageTitle}>{toolBarTitle}</span>
+                        <Typography variant='body2' className={classes.pageTitle}>{toolBarTitle}</Typography>
 
                         <div className={classes.corner}>
                         </div>

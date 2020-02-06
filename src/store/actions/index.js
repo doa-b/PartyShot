@@ -1,5 +1,6 @@
 export {
     fetch,
+    fetchSuccess,
     removeListener,
     setFullScreen,
     increaseNewRequests

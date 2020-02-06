@@ -1,5 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 import asyncComponent from './hoc/asyncComponent/asyncComponent'
 import Layout from './hoc/Layout/Layout';
 import * as ROUTES from './shared/routes';
@@ -79,7 +81,8 @@ const routes = (
         <Route exact path={ROUTES.HOME} component={homePage} />
         <Route exact path={ROUTES.ACCOUNT} component={accountPage} />
         <Route exact path={ROUTES.PARTIES} component={partiesPage} />
-        <Route exact path={ROUTES.PARTY_DETAILS} component={partyDetailsPage}/>
+        <Route path={ROUTES.PARTY_DETAILS + '/:id'} component={partyDetailsPage}/>
+        <Route path={ROUTES.PARTY_DETAILS} component={partyDetailsPage}/>
         <Route exact path={ROUTES.REQUESTS} component={requestsPage}/>
         <Route exact path={ROUTES.MONITOR} component={monitorPage}/>
         <Route exact path={ROUTES.PRIVACY_POLICY} component={privacyPolicyPage} />
@@ -93,9 +96,11 @@ const routes = (
 const App = (props) => {
     return (
         <Router>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
             <Layout variant='temporary'>
                 {routes}
             </Layout>
+            </MuiPickersUtilsProvider>
         </Router>
     );
 };
