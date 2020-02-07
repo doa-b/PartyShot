@@ -5,6 +5,7 @@ export const SIGN_OUT = '/signout';
 export const PASSWORD_FORGET = '/pw-forget';
 
 // guests
+export const START = '/start'
 export const NAME = '/name';
 export const PARTY_CODE = '/party-code';
 export const LANDING = '/';
@@ -26,6 +27,7 @@ export const REQUESTS = '/requests';
 
 export const pageTitle = (route) => {
     switch (route) {
+        case START: return 'Welkom!';
         case LANDING: return 'Shoot!';
         case SIGN_UP: return 'Sign Up';
         case SIGN_OUT: return 'Logged Out';

@@ -7,6 +7,9 @@ import {connect} from "react-redux";
 
 import MyToolbar from '../../components/ui/MyToolbar/MyToolbar';
 import MySideDrawer from '../../components/ui/MySideDrawer/MySideDrawer';
+import {getPartyCode} from "../../shared/localStorage";
+import * as actions from "../../store/actions";
+import {withFirebase} from "../../components/Firebase";
 
 
 /**
@@ -17,6 +20,14 @@ class Layout extends Component {
     state = {
         drawer: false
     };
+
+    componentDidMount() {
+        if (!this.props.event && !!getPartyCode()) {
+            this.props.onFetchOnce(this.props.firebase, getPartyCode())
+        }
+        // put auth in store
+
+    }
 
     toggleDrawer = () => {
         this.setState(prevState => ({
@@ -31,7 +42,7 @@ class Layout extends Component {
     };
 
     render() {
-        const { location, fullScreen, event, name, variant, children, newRequests } = this.props;
+        const { location, fullScreen, event, name, variant, children, newRequests, history } = this.props;
         return (
             <>
                 {(fullScreen) ? null : (
@@ -40,6 +51,7 @@ class Layout extends Component {
                         onMenuClick={this.toggleDrawer}
                         event={event}
                         name={name}
+                        history={history}
                     newRequests={newRequests}/>
                 )}
                 <MySideDrawer
@@ -65,7 +77,14 @@ const mapStateToProps = (state) => {
     }
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onFetchOnce: (firebase, partyCode) => dispatch(actions.fetchOnce(firebase, partyCode)),
+    }
+};
+
 export default compose(
+    withFirebase,
     withRouter,
-    connect(mapStateToProps)
+    connect(mapStateToProps, mapDispatchToProps)
 )(Layout);

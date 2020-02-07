@@ -5,6 +5,7 @@ import { registerNewUser } from '../../../../shared/axios'
 import * as ROUTES from '../../../../shared/routes'
 import {DateTimePicker} from "@material-ui/pickers";
 import moment from "moment";
+import 'moment/locale/nl'
 import {withFirebase} from "../../../../components/Firebase";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -47,7 +48,7 @@ const styles = theme => ({
 });
 
 const initialState = {
-    name: 'Kibbeling',
+    name: '',
     email: '',
     password: generatePassword(8),
 
@@ -58,7 +59,7 @@ const initialState = {
     blocked: 0,
 
     newRequests: 0,
-    event: 'Party of the year',
+    event: '',
 
     userUid: ''
 };
@@ -89,7 +90,7 @@ class PartyDetails extends Component {
                                  password: userData.password,
                                  email: userData.email
                              });
-                             console.log('the partyDat is:')
+                             console.log('the partyData is:')
                              console.log(partyData);
                              this.setState(partyData);
                          });
@@ -258,7 +259,7 @@ class PartyDetails extends Component {
                                     onChange={(event) => this.handleChange(event)}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
+                            <Grid item xs={12} sm={12} md={12}>
                                 <DateTimePicker
                                     fullWidth
                                     id='start'
@@ -277,7 +278,7 @@ class PartyDetails extends Component {
                                 />
                             </Grid>
                             {(finish) ?
-                                <Grid item xs={12} sm={6} md={4}>
+                                <Grid item xs={12} sm={12} md={12}>
                                     <DateTimePicker
                                         fullWidth
                                         id='finish'
@@ -296,7 +297,7 @@ class PartyDetails extends Component {
                                         animateYearScrolling/>
                                 </Grid> : null}
                             {(finish) ?
-                                <Grid item xs={12} sm={6} md={4}>
+                                <Grid item xs={12} sm={12} md={12}>
                                     <DateTimePicker
                                         fullWidth
                                         id='blocked'

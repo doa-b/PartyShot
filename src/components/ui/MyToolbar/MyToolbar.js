@@ -39,6 +39,7 @@ const styles = theme => ({
         color: 'inherit'
     },
     pageTitle: {
+        cursor: 'pointer',
         paddingLeft: 10,
         paddingRight: 10
     }
@@ -46,9 +47,14 @@ const styles = theme => ({
 });
 
 const MyToolbar = withStyles(styles)(
-    ({classes, title, onMenuClick, event, name, newRequests}) => {
+    ({classes, title, onMenuClick, event, name, newRequests, history}) => {
         const isMobile = useMediaQuery({ query: '(max-width: 600px)' });
         let toolBarTitle =  (isMobile) ? event : event + ' ' + name;
+
+        const navigate = (route) => {
+            console.log('navigate is clicked')
+            history && history.push(route)
+        };
 
         return (
             <>
@@ -68,14 +74,21 @@ const MyToolbar = withStyles(styles)(
                         >
                             {title.toUpperCase()}
                         </Typography>
-                        <Typography variant='body2' className={classes.pageTitle}>{toolBarTitle}</Typography>
+                        <Typography
+                            variant='body2'
+                            className={classes.pageTitle}
+                        onClick={()=> navigate(ROUTES.PARTIES)}>
+                            {toolBarTitle}</Typography>
 
                         <div className={classes.corner}>
                         </div>
                         <AuthUserContext.Consumer>
                             {authUser => (authUser && authUser.accessLevel >= ACCESSLEVEL.ARTIST) ? (
                                <>
-                                   <IconButton aria-label="show 4 new mails" color="inherit">
+                                   <IconButton
+                                       aria-label="show new requests"
+                                       color="inherit"
+                                   onClick={() => navigate(ROUTES.REQUESTS)}>
                                        <Badge color="secondary" badgeContent={newRequests}>
                                            <QueueMusicIcon />
                                        </Badge>

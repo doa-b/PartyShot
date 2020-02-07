@@ -81,3 +81,10 @@ export const increaseNewRequests = (firebase, partyCode, number) => {
     };
 
 };
+
+export const fetchOnce = (firebase, partyCode) => {
+  return dispatch => {
+      firebase.party(partyCode).once('value')
+          .then((snapshot) => dispatch(fetchSuccess(snapshot.val())))
+  }
+};

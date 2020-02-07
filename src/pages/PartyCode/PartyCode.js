@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {withFirebase} from "../../components/Firebase";
 import withStyles from '@material-ui/core/styles/withStyles'
 import * as ROUTES from '../../shared/routes';
@@ -42,10 +42,15 @@ const styles = theme => ({
  * Created by Doa on 27-1-2020.
  */
 const PartyCode = withStyles(styles)(
-    ({classes, history, firebase}) => {
+    ({classes, history, firebase, match}) => {
         const [partyCode, setPartyCode] = useState('');
         const [error, setError] = useState(null);
 
+        useEffect(() => {
+            if(!!match.params.partyCode) {
+               setPartyCode(match.params.partyCode)
+            }
+        });
         const onChange = (code) => {
             code.length < 7 && setPartyCode(code);
             error && setError(null);
@@ -95,6 +100,7 @@ const PartyCode = withStyles(styles)(
                     <Grid className={classes.grid} item xs={12}>
                         <Button
                             disabled={!!error}
+                            onClick={() => onChange(partyCode)}
                             type='submit'
                             variant='contained'
                             color='primary'>

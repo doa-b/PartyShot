@@ -29,7 +29,7 @@ export const createUniquePartyCode = (firebase) => {
                 do {
                     number = Math.floor(Math.random() * 1000000);
                 } while (snapshot.child(number).exists());
-                resolve('000000')
+                resolve(number)
             });
     })
 

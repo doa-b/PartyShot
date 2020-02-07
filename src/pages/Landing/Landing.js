@@ -436,6 +436,7 @@ class Landing extends Component {
         return (
             <>
                 {(!!getPartyCode()) ? null : <Redirect to={ROUTES.PARTY_CODE}/>}
+                {(!!getName()) ? null : <Redirect to={ROUTES.NAME}/>}
                 <input
                     type="file"
                     accept="image/*"

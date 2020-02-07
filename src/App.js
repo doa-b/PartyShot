@@ -66,6 +66,10 @@ const requestsPage = asyncComponent(() => {
     return import ('./pages/Admin/Requests/Requests')
 });
 
+const startPage = asyncComponent(() => {
+    return import ('./pages/Start/Start')
+});
+
 
 /**
  * Created by Doa on 27-1-2020.
@@ -86,8 +90,11 @@ const routes = (
         <Route exact path={ROUTES.REQUESTS} component={requestsPage}/>
         <Route exact path={ROUTES.MONITOR} component={monitorPage}/>
         <Route exact path={ROUTES.PRIVACY_POLICY} component={privacyPolicyPage} />
+        <Route path={ROUTES.START + '/:partyCode'} component={startPage} />
         <Route exact path={ROUTES.NAME} component={namePage} />
-        <Route exact path={ROUTES.PARTY_CODE} component={partyCodePage}/>
+        <Route  path={ROUTES.PARTY_CODE  + '/:partyCode'} component={partyCodePage}/>
+        <Route  path={ROUTES.PARTY_CODE} component={partyCodePage}/>
+
 
         <Route exact path={ROUTES.GALLERY} component={galleryPage}/>
     </Switch>
