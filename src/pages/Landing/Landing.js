@@ -12,7 +12,7 @@ import * as ROUTES from '../../shared/routes';
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import MyStepper from "../../components/ui/MyStepper";
+import MyStepper from "../../components/ui/MyStepper/MyStepper";
 import {TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -26,6 +26,9 @@ import {withFirebase} from "../../components/Firebase";
 import Snackbar from "@material-ui/core/Snackbar";
 import {Alert} from "@material-ui/lab";
 import RequestOrPhoto from "./RequestOrPhoto/RequestOrPhoto";
+import Compressor from 'compressorjs';
+import {showFile} from "../../shared/utility";
+import {compressImage} from "uppload";
 
 const styles = theme => ({
         '@global': {
@@ -171,16 +174,16 @@ const styles = theme => ({
             height:
                 '100%',
         },
-    requestContainer: {
-        '@media (orientation:landscape)': {
-            flexGrow: 4
+        requestContainer: {
+            '@media (orientation:landscape)': {
+                flexGrow: 4
+            }
+        },
+        photoContainer: {
+            '@media (orientation:landscape)': {
+                flexGrow: 1
+            }
         }
-    },
-    photoContainer: {
-        '@media (orientation:landscape)': {
-            flexGrow: 1
-        }
-    }
     })
 ;
 
@@ -194,6 +197,15 @@ const initialState =
         compressedFile: null,
         message: '',
     };
+
+const options = {
+    quality: 0.6,
+    checkOrientation: true,
+    maxWidth: 1920,
+    maxHeight: 1920,
+    minwidth: 1080,
+    minHeight: 1920
+};
 
 /**
  * Created by Doa on 27-1-2020.
@@ -228,18 +240,40 @@ class Landing extends Component {
             this.setState(() => ({photoFile: photo}));
             this.setState({photoUrl: URL.createObjectURL(photo)});
             // start compressing
-            this.compressPhoto(photo);
+            this.compressPhoto(photo, this.setCompressedImageToState);
         }
     };
 
-    compressPhoto = (file) => {
+    compressPhoto = (file, setCompressedImageToState) => {
+        const newFile = new Compressor(file, {
+            quality: 0.6,
+            checkOrientation: true,
+            maxWidth: 1920,
+            maxHeight: 1920,
+            minwidth: 1080,
+            minHeight: 1920,
+            success(result) {
+                showFile(result);
+                setCompressedImageToState(result)
+            },
+            error(err) {
+                console.log(err.message)
+            }
+        });
+    };
+
+    setCompressedImageToState = (image) => {
+        this.setState({compressing: false, compressedFile: image})
+    };
+
+    compressPhoto2 = (file) => {
         this.setState({compressing: true});
         console.log('originalFile instanceof Blob', file instanceof Blob); // true
         console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
 
         const options = {
             maxSizeMB: 1,
-            maxWidthOrHeight: 1920,
+            maxWidthOrHeight: 2000,
             useWebWorker: true
         };
         imageCompression(file, options)
@@ -293,7 +327,7 @@ class Landing extends Component {
             this.state.request,
             getName(),
             this.showResult);
-        this.props.setNewRequests (this.props.firebase, getPartyCode(), 1)
+        this.props.setNewRequests(this.props.firebase, getPartyCode(), 1)
         this.setState({request: ''});
     };
 
@@ -391,8 +425,9 @@ class Landing extends Component {
                 <>
                     <div className={classes.container}>
                         {!!(compressedFile) ? (
-                            <img src={URL.createObjectURL(compressedFile)} id='photo' className={classes.previewImage}/>)
-                         : (<ExifOrientationImg id='photo' className={classes.previewImage} src={photoUrl}/>)}
+                                <img src={URL.createObjectURL(compressedFile)} id='photo'
+                                     className={classes.previewImage}/>)
+                            : (<ExifOrientationImg id='photo' className={classes.previewImage} src={photoUrl}/>)}
 
                         <div className={classes.spacingTop}>
                             <SpeechBubble>

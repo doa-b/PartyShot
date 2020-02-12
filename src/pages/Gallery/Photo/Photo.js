@@ -43,7 +43,7 @@ const Photo = withStyles(styles)(
                         <CardMedia
                             className={classes.media}
                             image={url}
-                            title="Paella dish"
+                            title={uploader + ' ' + comment}
                         />
                     </Card>
                 </Grid>

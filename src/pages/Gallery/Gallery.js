@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {compose} from "redux";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {withFirebase} from "../../components/Firebase";
-import * as actionTypes from "../../store/actions";
+import * as actions from "../../store/actions";
 import {connect} from "react-redux";
 import {getPartyCode} from "../../shared/localStorage";
 import Photo from "./Photo/Photo";
@@ -68,8 +68,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onFetch: (firebase, partyCode, auth) => dispatch(actionTypes.fetch(firebase, partyCode, auth)),
-        onRemoveListener: () => dispatch(actionTypes.removeListener())
+        onFetch: (firebase, partyCode, auth) => dispatch(actions.fetch(firebase, partyCode, auth)),
+        onRemoveListener: () => dispatch(actions.removeListener())
     }
 };
 

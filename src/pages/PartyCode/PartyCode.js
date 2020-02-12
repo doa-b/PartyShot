@@ -6,7 +6,7 @@ import * as local from "../../shared/localStorage";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import MyStepper from "../../components/ui/MyStepper";
+import MyStepper from "../../components/ui/MyStepper/MyStepper";
 import {TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 

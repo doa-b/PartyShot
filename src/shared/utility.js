@@ -11,6 +11,10 @@ export const createUUID = () => {
     return uuid;
 };
 
+export const showFile = (file) => {
+    console.log(file)
+}
+
 export const generatePassword = (length) => {
        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
        let retVal = "";

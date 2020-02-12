@@ -36,10 +36,13 @@ const Home = withStyles(styles)(
                             <Container component="main" maxWidth="sm">
                                 <CssBaseline/>
                             <div className={classes.root}>
-                                <Typography  variant="h4" component="h1">Welkom {authUser.firstName}!</Typography>
+                                <Typography  variant="h4" component="h1">Welkom {authUser.firstName}</Typography>
+                                {start>Date.now() &&
                                 <Typography  variant="subtitle1" >
-                                    Nog {moment(start).fromNow(true)} tot je {event}
+                                    Nog {moment(start).fromNow(true)} tot je {event}!
                                 </Typography>
+                                }
+
                                 <Typography  variant="subtitle2" className={classes.subtitle} color='primary' >
                                     Gebruik
                                 </Typography>

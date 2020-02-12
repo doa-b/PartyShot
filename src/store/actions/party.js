@@ -61,6 +61,7 @@ export const fetch = (firebase, partyCode, auth = false) => {
         });
         if (auth) {
             // fetch photo's and requests
+            console.log('set photos listener')
             photosListener = firebase.photoList(partyCode).on('value', (snapshot) => {
                 const photos = convertObjectsAndSortByKey(snapshot.val(), 'lastShown', 'asc');
                 dispatch(fetchSuccess({photos: photos}));

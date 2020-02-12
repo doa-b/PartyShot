@@ -5,7 +5,7 @@ import { registerNewUser } from '../../../../shared/axios'
 import * as ROUTES from '../../../../shared/routes'
 import {DateTimePicker} from "@material-ui/pickers";
 import moment from "moment";
-import 'moment/locale/nl'
+import 'moment/locale/nl';
 import {withFirebase} from "../../../../components/Firebase";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import moment from "moment";
+import 'moment/locale/nl';
 import {lighten, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -324,9 +326,9 @@ function PartiesTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked}
                                         <TableCell
                                             className={classes.cell}
                                             align="left">
-                                            {msToDate(row.start)}</TableCell>
+                                            {moment(row.start).format('L')}</TableCell>
                                         <TableCell className={classes.cell}
-                                                   align="left">{msToTime(row.start)}</TableCell>
+                                                   align="left">{moment(row.start).format('LT')}</TableCell>
                                         <TableCell className={classes.cell} align="left">{row.event}</TableCell>
                                         <TableCell className={classes.cell} align="left">{row.name}</TableCell>
                                         <TableCell className={classes.cell} align="left">{row.id}</TableCell>
