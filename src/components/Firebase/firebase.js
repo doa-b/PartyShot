@@ -2,13 +2,13 @@ import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
+import 'firebase/functions'
 import {extension} from 'mime-types'
 import {createUUID, getCurrentUTCinMs} from "../../shared/utility";
 import * as local from '../../shared/localStorage'
-import * as actions from "../../store/actions";
 
 import {firebaseConfig} from '../../kluisje';
-import {fetchSuccess} from "../../store/actions";
+
 
 class Firebase {
     constructor() {
@@ -17,7 +17,26 @@ class Firebase {
         this.auth = app.auth();
         this.db = app.database();
         this.storage = app.storage();
+        this.function = app.functions();
     }
+
+    // ** Cloud functions API **
+
+ // addMessage = this.function.httpsCallable('addMessage');
+
+   // callAddMessage = (message) => {
+   //     this.addMessage({text: message}).then(function(result) {
+   //         // Read result of the Cloud Function.
+   //         var sanitizedMessage = result.data.text;
+   //     }).catch(function(error) {
+   //         // Getting the Error details.
+   //         var code = error.code;
+   //         var message = error.message;
+   //         var details = error.details;
+   //         // ...
+   //     });
+   // }
+
 
     // *** Auth API ***
 
@@ -97,7 +116,28 @@ class Firebase {
 
     photo = (fileName, partyCode) => this.storage.ref(`photos/${partyCode}/${fileName}`);
 
-   // photos = (partyCode) => this.storage.ref(`photos/${partyCode}`);
+    deleteFolderContents(path) {
+        const ref = this.storage.ref(path);
+        ref.listAll()
+            .then(dir => {
+                dir.items.forEach(fileRef => {
+                    this.deleteFile(ref.fullPath, fileRef.name);
+                });
+                dir.prefixes.forEach(folderRef => {
+                    this.deleteFolderContents(folderRef.fullPath);
+                })
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    deleteFile(pathToFile, fileName) {
+        const ref = this.storage.ref(pathToFile);
+        const childRef = ref.child(fileName);
+        childRef.delete()
+    }
+
 
     deletePhoto = (fileName, partyCode) => {
       this.photo(fileName, partyCode).delete()

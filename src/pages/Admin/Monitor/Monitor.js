@@ -5,14 +5,12 @@ import {compose} from "redux";
 import {withFirebase} from "../../../components/Firebase";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {connect} from "react-redux";
-import {Textfit} from 'react-textfit';
-import {Transition} from 'react-transition-group';
+
 import {Fade} from "@material-ui/core";
-import Grow from "@material-ui/core/Grow";
-import Portrait from './Portrait/Portrait';
-import Landscape from "./Landscape/Landscape";
+
 import Display from "./Display";
 import Fullscreen from "react-full-screen";
+import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
     "@global": {
@@ -58,6 +56,10 @@ const styles = theme => ({
         position: 'absolute',
         top: 0,
         left: 0,
+    },
+    introText: {
+        textAlign: 'center',
+        marginTop: '15%'
     }
 });
 
@@ -80,7 +82,8 @@ class Monitor extends Component {
 
     componentDidMount() {
         getPartyCode() && this.props.onFetch(this.props.firebase, getPartyCode(), true);
-        this.interval = setInterval(() => this.photoAction(), 5000)
+        this.interval = setInterval(() => this.photoAction(), 5000);
+        this.props.showToastMessage('Klik op het scherm om volledig scherm in te schakelen')
     }
 
     componentWillUnmount() {
@@ -95,12 +98,16 @@ class Monitor extends Component {
     }
 
     onToggleFullScreen = () => {
+        const {onSetFullScreen, showToastMessage} = this.props;
         if (this.state.isFullScreen) {
-            this.props.onSetFullScreen(false);
+            onSetFullScreen(false);
             this.setState({isFullScreen: false});
+            showToastMessage('Volledig scherm afgesloten. Klik ergens op het scherm om weer in te schakelen')
+
         } else {
-            this.props.onSetFullScreen(true);
+            onSetFullScreen(true);
             this.setState({isFullScreen: true});
+            showToastMessage('Volledig scherm ingeschakeld. Klik nogmaals op het scherm om weer uit te schakelen')
         }
     };
 
@@ -131,18 +138,37 @@ class Monitor extends Component {
             .then(() => console.log('updated'))
     };
     switchPhoto = () => {
-        console.log('switching Photo');
+
         // toggle which display to display
         this.setState(prevState => ({isDisplay0: !prevState.isDisplay0, isLoading: true}));
         // transition from fristPhoto to secondphoto or vice versa
     };
 
+
     render() {
-        console.log('((re)rendering')
-        const {classes} = this.props;
+
+        const {classes, photos, partyCode, event, name} = this.props;
         const {canvas0Photos, canvas1Photos, isDisplay0, isFullScreen} = this.state;
 
-        return (
+        let page = (
+            <div className={classes.introText}>
+                <Typography variant='h1' color='primary'>
+                    {event + ' ' + name}
+                </Typography>
+                <Typography variant='h3'>
+                    Stuur je foto's naar dit scherm via de App!
+                </Typography>
+                <Typography variant='h4'>
+                    Je kunt de App downloaden op www.partyshot.nu.
+                </Typography>
+                <Typography variant='h4'>
+                    Gebruik Party Code {partyCode} voor dit feest
+                </Typography>
+            </div>
+
+        );
+
+        if (photos.length > 0) page = (
             <Fullscreen enabled={isFullScreen}>
                 <div className={classes.root} onClick={this.onToggleFullScreen}>
                     <Fade in={isDisplay0}
@@ -162,6 +188,8 @@ class Monitor extends Component {
                 </div>
             </Fullscreen>
         );
+
+        return page
     }
 }
 
@@ -195,6 +223,7 @@ const mapStateToProps = (state) => {
     return {
         partyCode: state.party.partyCode,
         event: state.party.event,
+        name: state.party.name,
         photos: state.party.photos
     }
 };
@@ -204,6 +233,7 @@ const mapDispatchToProps = (dispatch) => {
         onFetch: (firebase, partyCode, auth) => dispatch(actions.fetch(firebase, partyCode, auth)),
         onRemoveListener: () => dispatch(actions.removeListener()),
         onSetFullScreen: (isFullScreen) => dispatch(actions.setFullScreen(isFullScreen)),
+        showToastMessage: (message) => dispatch(actions.showToastMessage(message))
     }
 };
 

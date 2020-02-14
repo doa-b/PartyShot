@@ -23,6 +23,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import PersonIcon from '@material-ui/icons/Person';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -93,6 +94,12 @@ const MySideDrawer = withStyles(styles)(
                     Icon={PersonOutlineIcon}
                     onClick={onItemClick()}
                 />
+                <NavItem
+                    to={ROUTES.PRIVACY_POLICY}
+                    text='Privacybeleid'
+                    Icon={DescriptionIcon}
+                    onClick={onItemClick()}
+                />
             </List>
         );
 
@@ -119,18 +126,18 @@ const MySideDrawer = withStyles(styles)(
                     Icon={ExitToAppIcon}
                     onClick={onItemClick()}
                 />
-                <ListSubheader>
-                    Settings
-                </ListSubheader>
-                <ListItem>
-                    <Checkbox
-                        value={setting1}
-                        onChange={() => toggleSetting1(!setting1)}
-                        checked={setting1}/>
-                    <ListItemText>
-                        Dummy Setting
-                    </ListItemText>
-                </ListItem>
+                {/*<ListSubheader>*/}
+                {/*    Settings*/}
+                {/*</ListSubheader>*/}
+                {/*<ListItem>*/}
+                {/*    <Checkbox*/}
+                {/*        value={setting1}*/}
+                {/*        onChange={() => toggleSetting1(!setting1)}*/}
+                {/*        checked={setting1}/>*/}
+                {/*    <ListItemText>*/}
+                {/*        Dummy Setting*/}
+                {/*    </ListItemText>*/}
+                {/*</ListItem>*/}
                 <ListSubheader>
                     Navigation
                 </ListSubheader>
@@ -177,17 +184,23 @@ const MySideDrawer = withStyles(styles)(
                             onClick={onItemClick()}
                         />
                         <NavItem
-                            to={ROUTES.NAME}
-                            text='Naam'
-                            Icon={PersonIcon}
+                            to={ROUTES.PRIVACY_POLICY}
+                            text='Privacybeleid'
+                            Icon={DescriptionIcon}
                             onClick={onItemClick()}
                         />
-                        <NavItem
-                            to={ROUTES.PARTY_CODE}
-                            text='PartyCode'
-                            Icon={CropFreeIcon}
-                            onClick={onItemClick()}
-                        />
+                        {/*<NavItem*/}
+                        {/*    to={ROUTES.NAME}*/}
+                        {/*    text='Naam'*/}
+                        {/*    Icon={PersonIcon}*/}
+                        {/*    onClick={onItemClick()}*/}
+                        {/*/>*/}
+                        {/*<NavItem*/}
+                        {/*    to={ROUTES.PARTY_CODE}*/}
+                        {/*    text='PartyCode'*/}
+                        {/*    Icon={CropFreeIcon}*/}
+                        {/*    onClick={onItemClick()}*/}
+                        {/*/>*/}
                     </>
                 )}
             </List>);

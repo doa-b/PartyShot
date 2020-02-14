@@ -10,6 +10,8 @@ import MySideDrawer from '../../components/ui/MySideDrawer/MySideDrawer';
 import {getPartyCode} from "../../shared/localStorage";
 import * as actions from "../../store/actions";
 import {withFirebase} from "../../components/Firebase";
+import Snackbar from "@material-ui/core/Snackbar";
+import {Alert} from "@material-ui/lab";
 
 
 /**
@@ -42,7 +44,8 @@ class Layout extends Component {
     };
 
     render() {
-        const { location, fullScreen, event, name, variant, children, newRequests, history } = this.props;
+        const { location, fullScreen, event, name, variant, children,
+            newRequests, history, message, closeMessage } = this.props;
         return (
             <>
                 {(fullScreen) ? null : (
@@ -60,6 +63,13 @@ class Layout extends Component {
                     onClose={this.toggleDrawer}
                     onItemClick={this.onItemClick}
                 />
+                <Snackbar open={!!message}
+                          autoHideDuration={4000}
+                          onClose={closeMessage}>
+                    <Alert severity="success">
+                        {message}
+                    </Alert>
+                </Snackbar>
                 <div>
                     {children}
                 </div>
@@ -73,13 +83,15 @@ const mapStateToProps = (state) => {
         fullScreen: state.party.fullScreen,
         event: state.party.event,
         name: state.party.name,
-        newRequests: state.party.newRequests
+        newRequests: state.party.newRequests,
+        message: state.party.message
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onFetchOnce: (firebase, partyCode) => dispatch(actions.fetchOnce(firebase, partyCode)),
+        closeMessage: () => dispatch(actions.closeToastMessage())
     }
 };
 

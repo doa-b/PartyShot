@@ -50,6 +50,20 @@ export const removeListener = () => {
     }
 };
 
+export const showToastMessage = (message) => {
+    return {
+        type: actionTypes.SET_TOAST_MESSAGE,
+        message: message
+    }
+};
+
+export const closeToastMessage = () => {
+    return {
+        type: actionTypes.SET_TOAST_MESSAGE,
+        message: null
+    }
+};
+
 // *** asynchronous actionCreators ***
 
 export const fetch = (firebase, partyCode, auth = false) => {

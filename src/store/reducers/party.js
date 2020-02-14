@@ -16,7 +16,8 @@ export const initialState = {
     loading: false,
     error: false,
     fullScreen: false,
-    newRequests: 0
+    newRequests: 0,
+    message: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -25,6 +26,7 @@ const reducer = (state = initialState, action) => {
       case actionTypes.SUCCES: return updateObject(state, {error: false, loading: false});
       case actionTypes.FETCH: return updateObject(state, action.data);
       case actionTypes.SET_FULL_SCREEN: return updateObject(state, {fullScreen: action.isFullScreen});
+      case actionTypes.SET_TOAST_MESSAGE: return updateObject(state, {message: action.message});
       default: return state
   }
 };

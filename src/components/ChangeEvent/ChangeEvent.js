@@ -14,6 +14,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 const styles = theme => ({
     change: {
+        width: '97%',
         marginTop: theme.spacing(2),
         marginLeft: theme.spacing(2)
     }

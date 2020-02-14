@@ -257,7 +257,7 @@ class Landing extends Component {
                 setCompressedImageToState(result)
             },
             error(err) {
-                console.log(err.message)
+                this.props.showToastMessage(err.message)
             }
         });
     };
@@ -266,6 +266,8 @@ class Landing extends Component {
         this.setState({compressing: false, compressedFile: image})
     };
 
+
+    // old compressor. Can be removed
     compressPhoto2 = (file) => {
         this.setState({compressing: true});
         console.log('originalFile instanceof Blob', file instanceof Blob); // true
@@ -305,7 +307,7 @@ class Landing extends Component {
             this.isPortrait(),
             this.state.comment,
             getName(),
-            this.showResult
+            this.props.showToastMessage
         );
         this.onClose();
     };
@@ -326,8 +328,8 @@ class Landing extends Component {
             this.props.partyCode,
             this.state.request,
             getName(),
-            this.showResult);
-        this.props.setNewRequests(this.props.firebase, getPartyCode(), 1)
+            this.props.showToastMessage);
+        this.props.setNewRequests(this.props.firebase, getPartyCode(), 1);
         this.setState({request: ''});
     };
 
@@ -335,16 +337,6 @@ class Landing extends Component {
         if (event.key === 'Enter') {
             this.onSubmitRequest()
         }
-    };
-
-    showResult = (message) => {
-        console.log('result');
-        console.log(message);
-        this.setState({message: message})
-    };
-
-    closeMessage = () => {
-        this.setState({message: ''})
     };
 
     setComment = (event) => {
@@ -506,7 +498,8 @@ const mapDispatchToProps = (dispatch) => {
         onRemoveListener: () => dispatch(actions.removeListener()),
         onSetFullScreen: (isFullScreen) => dispatch(actions.setFullScreen(isFullScreen)),
         setNewRequests: (firebase, partyCode, number) =>
-            dispatch(actions.increaseNewRequests(firebase, partyCode, number))
+            dispatch(actions.increaseNewRequests(firebase, partyCode, number)),
+        showToastMessage: (message) => dispatch(actions.showToastMessage(message))
     }
 };
 

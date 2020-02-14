@@ -176,8 +176,7 @@ const useStyles = makeStyles(theme => ({
         whiteSpace: 'normal',
         overflowX: 'auto',
     },
-    tableRow: {
-    },
+    tableRow: {},
     visuallyHidden: {
         border: 0,
         clip: 'rect(0 0 0 0)',
@@ -224,12 +223,12 @@ function PartiesTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked}
         setOrderBy(property);
     };
 
-    const handleRowClicked = (event, row) => {
-        if (event.target.id === SELECT_CHECKBOX) {
-            return handleClick(event, row.id)
-        }
-        onDetailsClicked(row.id);
-    };
+    // const handleRowClicked = (event, row) => {
+    //     if (event.target.id === SELECT_CHECKBOX) {
+    //         return handleClick(event, row.id)
+    //     }
+    //     onDetailsClicked(row.id);
+    // };
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
@@ -241,7 +240,6 @@ function PartiesTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked}
     };
 
     const handleClick = (event, uid) => {
-        console.log(rows);
         const selectedIndex = selected.indexOf(uid);
         let newSelected = [];
 
@@ -308,15 +306,15 @@ function PartiesTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked}
                                     <TableRow
                                         className={classes.tableRow}
                                         hover
-                                        onClick={(event) => {
-                                            handleRowClicked(event, row)
-                                        }}
+                                        // onClick={(event) => {
+                                        //     handleRowClicked(event, row)
+                                        // }}
                                         role="checkbox"
                                         tabIndex={-1}
                                         key={row.id}
                                         selected={isItemSelected}
                                     >
-                                        <TableCell padding="checkbox">
+                                        <TableCell onClick={(event) => handleClick(event, row.id)} padding="checkbox">
                                             <Checkbox
                                                 id={SELECT_CHECKBOX}
                                                 checked={isItemSelected}
@@ -325,13 +323,25 @@ function PartiesTable({rows, onDetailsClicked, onActiveClicked, onDeleteClicked}
                                         </TableCell>
                                         <TableCell
                                             className={classes.cell}
-                                            align="left">
+                                            align="left"
+                                            onClick={() => onDetailsClicked(row.id)}>
                                             {moment(row.start).format('L')}</TableCell>
                                         <TableCell className={classes.cell}
-                                                   align="left">{moment(row.start).format('LT')}</TableCell>
-                                        <TableCell className={classes.cell} align="left">{row.event}</TableCell>
-                                        <TableCell className={classes.cell} align="left">{row.name}</TableCell>
-                                        <TableCell className={classes.cell} align="left">{row.id}</TableCell>
+                                                   align="left"
+                                                   onClick={() => onDetailsClicked(row.id)}>
+                                            {moment(row.start).format('LT')}</TableCell>
+                                        <TableCell className={classes.cell}
+                                                   align="left"
+                                                   onClick={() => onDetailsClicked(row.id)}>
+                                        {row.event}</TableCell>
+                                        <TableCell className={classes.cell}
+                                                   align="left"
+                                                   onClick={() => onDetailsClicked(row.id)}>
+                                            {row.name}</TableCell>
+                                        <TableCell className={classes.cell}
+                                                   align="left"
+                                                   onClick={() => onDetailsClicked(row.id)}>
+                                            {row.id}</TableCell>
                                         <TableCell className={classes.cell} padding="checkbox">
                                             <IconButton
                                                 onClick={() => onDeleteClicked([row.id])}>

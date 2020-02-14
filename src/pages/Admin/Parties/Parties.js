@@ -71,18 +71,14 @@ class Parties extends Component {
         const deletes = {};
         selected.map((select) => {
             console.log(select);
-
-            // TODO delete 1 user select.userUid
             const userId = this.state.parties.filter((party) => (party.id === select))[0].userUid;
             console.log(userId);
             firebase.user(userId).remove();
+            firebase.deleteFolderContents(`photos/${select}`);
             // TODO delete 1 Auth user: must be a firebase function, because it uses firebase admin sdk
             return  deletes[select] = null;
-
         });
-        // TODO delete photo folder from storage. Also requires function:
-        // https://medium.com/google-developer-experts/automatically-delete-your-firebase-storage-files-from-firestore-with-cloud-functions-for-firebase-36542c39ba0d
-        // TODO delete all photos
+
         firebase.parties().update(deletes);
         firebase.requests().update(deletes);
         firebase.photos().update(deletes);
