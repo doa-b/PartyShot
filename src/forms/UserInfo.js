@@ -43,8 +43,7 @@ const styles = theme => ({
 });
 
 let SignupSchema = yup.object().shape({
-    firstName: yup.string().required('Please enter your firstname.'),
-    lastName: yup.string().required('Please enter your lastname.'),
+    name: yup.string().required('Please enter your full name.'),
     email: yup.string()
         .email()
         .required('Email is required.'),
@@ -63,8 +62,7 @@ let SignupSchema = yup.object().shape({
 const UserInfo = withStyles(styles)(({classes, handleSubmit, userData, isAdmin, buttonLabel = 'Update'}) => {
     // Note when you do not set a initial value, yup will not validate it
     let initialValues = {
-        firstName: '',
-        lastName: '',
+        name: '',
         email: '',
         password: '',
         passwordConfirmation: '',
@@ -78,8 +76,7 @@ const UserInfo = withStyles(styles)(({classes, handleSubmit, userData, isAdmin, 
     if (userData) {
         initialValues = userData;
         SignupSchema = yup.object().shape({
-            firstName: yup.string().required('Please enter your firstname.'),
-            lastName: yup.string().required('Please enter your lastname.'),
+            name: yup.string().required('Please enter your full name.'),
             accessLevel: yup.string().required('Please set an access Level'),
             termsAgreement: yup.bool().oneOf([true], 'You must agree to use this App')
         });
@@ -87,8 +84,7 @@ const UserInfo = withStyles(styles)(({classes, handleSubmit, userData, isAdmin, 
     }
     if (isAdmin === true) {
         SignupSchema = yup.object().shape({
-            firstName: yup.string().required('Please enter your firstname.'),
-            lastName: yup.string().required('Please enter your lastname.'),
+            name: yup.string().required('Please enter your full name.'),
             accessLevel: yup.string().required('Please set an access Level'),
         });
     }
@@ -109,39 +105,21 @@ const UserInfo = withStyles(styles)(({classes, handleSubmit, userData, isAdmin, 
                     {({errors, handleChange, touched, values}) => (
                         <Form className={classes.form}>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12}>
                                     <TextField
-                                        value={values.firstName}
-                                        error={errors.firstName && touched.firstName}
-                                        autoComplete='fname'
-                                        name='firstName'
+                                        value={values.name}
+                                        error={errors.name && touched.name}
+                                        autoComplete='name'
+                                        name='name'
                                         variant='outlined'
                                         fullWidth
                                         onChange={handleChange}
-                                        id='firstName'
-                                        label='First Name'
+                                        id='name'
+                                        label='Name'
                                         autoFocus
                                         helperText={
-                                            errors.firstName && touched.firstName
-                                                ? errors.firstName
-                                                : null
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        value={values.lastName}
-                                        error={errors.lastName && touched.lastName}
-                                        variant='outlined'
-                                        fullWidth
-                                        onChange={handleChange}
-                                        id='lastName'
-                                        label='Last Name'
-                                        name='lastName'
-                                        autoComplete='lname'
-                                        helperText={
-                                            errors.lastName && touched.lastName
-                                                ? errors.lastName
+                                            errors.name && touched.name
+                                                ? errors.name
                                                 : null
                                         }
                                     />

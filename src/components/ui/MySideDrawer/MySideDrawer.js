@@ -112,7 +112,7 @@ const MySideDrawer = withStyles(styles)(
                             src={authUser.imageUrl}/>
                 </ListItem>
                 <ListSubheader>
-                    {authUser.firstName + ' ' + authUser.lastName}
+                    {authUser.name}
                 </ListSubheader>
                 <NavItem
                     to={ROUTES.ACCOUNT}

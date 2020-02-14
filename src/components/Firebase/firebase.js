@@ -75,7 +75,7 @@ class Firebase {
                         };
                         // set local storage
                         console.log('setting local storage');
-                        local.setName(dbUser.firstName);
+                        local.setName(dbUser.name);
                         local.setPartyCode(dbUser.partyCode);
                         next(authUser);
                     });
