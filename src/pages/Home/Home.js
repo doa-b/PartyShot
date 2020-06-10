@@ -25,6 +25,7 @@ const styles = theme => ({
 });
 /**
  * Created by Doa on 27-1-2020.
+ * TODO if now() > blocked display "contact Admin" and logout after 5 secs"
  */
 const Home = withStyles(styles)(
     ({classes, event, start, partyCode}) => {

@@ -5,7 +5,7 @@ export const SIGN_OUT = '/signout';
 export const PASSWORD_FORGET = '/pw-forget';
 
 // guests
-export const START = '/start'
+export const START = '/start';
 export const NAME = '/name';
 export const PARTY_CODE = '/party-code';
 export const LANDING = '/';
@@ -23,25 +23,24 @@ export const PARTY_DETAILS = '/party-details';
 export const MONITOR = '/monitor';
 export const REQUESTS = '/requests';
 
-
+const routeNames = new Map([
+    [START, 'Welkom'],
+    [LANDING, 'Shoot!'],
+    [SIGN_UP, 'Sign Up'],
+    [SIGN_OUT, 'Logged Out'],
+    [HOME, 'Welkom!'],
+    [ACCOUNT, 'My Account'],
+    [PARTIES, 'Events'],
+    [PASSWORD_FORGET, 'Forgot Password'],
+    [PRIVACY_POLICY, 'Privacy Policy'],
+    [NAME, 'Je naam'],
+    [PARTY_CODE, 'Welkom!'],
+    [PARTY_DETAILS, 'Party Details'],
+    [GALLERY, 'Gallerij'],
+    [MONITOR, 'Monitor'],
+    [REQUESTS, 'Verzoekjes']
+]);
 
 export const pageTitle = (route) => {
-    switch (route) {
-        case START: return 'Welkom!';
-        case LANDING: return 'Shoot!';
-        case SIGN_UP: return 'Sign Up';
-        case SIGN_OUT: return 'Logged Out';
-        case HOME: return 'Welkom!';
-        case ACCOUNT: return 'My Account';
-        case PARTIES: return 'Events';
-        case PASSWORD_FORGET: return 'Forgot Password';
-        case PRIVACY_POLICY: return 'Privacy Policy';
-        case NAME: return 'Je naam';
-        case PARTY_CODE: return 'Welkom!';
-        case PARTY_DETAILS: return 'Party Details';
-        case GALLERY: return 'Gallerij';
-        case MONITOR: return 'Monitor';
-        case REQUESTS: return 'Verzoekjes';
-        default: return 'home'
-    }
+    return routeNames.get(route) || 'Home';
 };

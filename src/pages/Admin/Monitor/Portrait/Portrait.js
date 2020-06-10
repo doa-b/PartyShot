@@ -19,7 +19,7 @@ const styles = theme => ({
         backgroundColor: 'black',
         width: '100%',
         height: '100%',
-        objectFit: 'contain'
+        objectFit: 'contain',
     },
     verticalPreview: {
         zIndex: '12',
@@ -29,8 +29,9 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
+        alignItems: 'center',
         height: '100%',
-        width: '27%'
+        width: '27%',
     },
     verticalPreviewRight: {
         zIndex: '12',
@@ -40,6 +41,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
+        alignItems: 'center',
         height: '100%',
         width: '27%'
     },
@@ -47,9 +49,11 @@ const styles = theme => ({
         flex: '0 0 324px',
     },
     previewImage: {
-        width: '100%',
         height: '324px',
-        objectFit: 'contain'
+        objectFit: 'contain',
+        overflow: 'hidden',
+        border: '2px solid white',
+        borderRadius: 5,
     }
 });
 /**

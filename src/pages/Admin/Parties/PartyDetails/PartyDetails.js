@@ -82,6 +82,7 @@ class PartyDetails extends Component {
                     let partyData = snapshot.val();
 
                  if (partyData) {
+                     console.log(partyData);
                      this.props.firebase.user(partyData.userUid).once('value')
                          .then((user) => {
                              console.log(user.val());

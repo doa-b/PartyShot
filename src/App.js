@@ -2,7 +2,8 @@ import React from 'react';
 import {BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
-import asyncComponent from './hoc/asyncComponent/asyncComponent'
+import asyncComponent from './hoc/asyncComponent/asyncComponent';
+import withErrorHandler from './hoc/withErrorHandler';
 import Layout from './hoc/Layout/Layout';
 import * as ROUTES from './shared/routes';
 
@@ -103,11 +104,13 @@ const routes = (
 const App = (props) => {
     return (
         <Router>
+            <withErrorHandler>
             <MuiPickersUtilsProvider utils={MomentUtils}>
             <Layout variant='temporary'>
                 {routes}
             </Layout>
             </MuiPickersUtilsProvider>
+            </withErrorHandler>
         </Router>
     );
 };

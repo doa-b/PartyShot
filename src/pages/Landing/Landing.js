@@ -29,6 +29,8 @@ import RequestOrPhoto from "./RequestOrPhoto/RequestOrPhoto";
 import Compressor from 'compressorjs';
 import {showFile} from "../../shared/utility";
 import {compressImage} from "uppload";
+import moment from "moment";
+import 'moment/locale/nl';
 
 const styles = theme => ({
         '@global': {
@@ -183,6 +185,11 @@ const styles = theme => ({
             '@media (orientation:landscape)': {
                 flexGrow: 1
             }
+        },
+        message: {
+            padding: 10,
+            marginTop: '40%',
+            textAlign: 'center'
         }
     })
 ;
@@ -350,7 +357,7 @@ class Landing extends Component {
     };
 
     render() {
-        const {classes, firebase} = this.props;
+        const {classes, firebase, event, name, start, finish} = this.props;
         const {request, comment, photoUrl, photoFile, compressing, message, compressedFile} = this.state;
         // if now() > partyFinish page = 'party is finished, you cannot upload any more pictures
         // ask party.name for pictures'
@@ -358,7 +365,6 @@ class Landing extends Component {
 
         let page = (
             <Container component='main' maxWidth='sm'>
-                <RequestOrPhoto/>
                 <CssBaseline/>
                 <div className={classes.paper}>
                     <Grid container spacing={2} className={classes.requestContainer}>
@@ -411,6 +417,25 @@ class Landing extends Component {
                     </Grid>
                 </div>
             </Container>);
+
+        if (start && moment().isBefore(moment(start))) {
+            page = (
+                <div className={classes.message}>
+                    <p>{event + " van " + name + "is nog niet begonnen"}</p>
+                    <p>{"Je kunt foto\'s nemen over: " + moment(start).fromNow(start)} </p>
+
+                </div>
+            )
+        }
+
+        if (finish && moment().isAfter(moment(finish))) {
+            page = (
+                <div className={classes.message}>
+                    <p>{event + " is afgelopen"}</p>
+                    <p>{"Vraag " + name + " naar jullie foto\'s"} </p>
+                </div>
+            )
+        }
 
         if (photoFile) {
             page = (
@@ -488,7 +513,11 @@ class Landing extends Component {
 const mapStateToProps = (state) => {
     return {
         partyCode: state.party.partyCode,
-        event: state.party.event
+        event: state.party.event,
+        name: state.party.name,
+        start: state.party.start,
+        finish: state.party.finish,
+        blocked: state.party.blocked,
     }
 };
 
